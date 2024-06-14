@@ -1,0 +1,26 @@
+QMenu::separator {
+	background-color: #4e4e4e;
+	height: 1px;
+	margin-top: 3px;
+	margin-bottom: 0px;
+}
+QMenu {
+    border: 1px solid #4e4e4e;
+}
+QMenu::item:disabled {
+    background-color: transparent;
+}
+QToolBar{
+	border: 1px solid #4e4e4e;
+	border-left: none;
+	border-right: none;
+}
+QToolButton:checked {
+	background-color: #303030;
+	border-color: #636363;
+}
+QToolBar::separator {
+	background-color: #4e4e4e;
+	width: 1px;
+	margin: 3px;
+}

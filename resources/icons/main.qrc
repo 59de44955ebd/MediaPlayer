@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>app.png</file>
+    <file>loop.png</file>
+    <file>skip_back.png</file>
+    <file>skip_forward.png</file>
+    <file>volume.png</file>
+    <file>volume_mute.png</file>
+    <file>pause.png</file>
+    <file>play.png</file>
+    <file>step_back.png</file>
+    <file>step_forward.png</file>
+    <file>stop.png</file>
+  </qresource>
+</RCC>
