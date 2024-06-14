@@ -176,6 +176,9 @@
    </property>
   </action>
   <action name="action_toggle_fullscreen">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Fullscreen</string>
    </property>

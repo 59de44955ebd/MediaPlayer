@@ -167,6 +167,7 @@ class Main(QMainWindow):
                 self.resize(int(w), int(h) + dh)  # resize window to video
             self._duration = self.video_widget.get_duration()
             self.slider_time.setEnabled(True)
+            self.action_toggle_fullscreen.setEnabled(has_video)
             self.action_toggle_play.setEnabled(True)
             for action in self.toolBar.actions():
                 if action.objectName():
@@ -179,6 +180,7 @@ class Main(QMainWindow):
             self._timer.stop()
             self.slider_time.setValue(0)
             self.slider_time.setEnabled(False)
+            self.action_toggle_fullscreen.setEnabled(False)
             self.action_toggle_play.setEnabled(False)
             for action in self.toolBar.actions():
                 if action.objectName():
