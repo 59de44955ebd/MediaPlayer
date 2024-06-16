@@ -3,6 +3,7 @@ from ctypes import c_void_p
 import AVFoundation
 from Cocoa import NSURL, NSMakeRect
 import CoreMedia
+import MediaToolbox
 import objc
 
 from PyQt5.QtCore import Qt, pyqtSignal, QTimer
@@ -38,12 +39,16 @@ class VideoWidget(QWidget):
 
         # cast QWidget to NSView
         self._view = objc.objc_object(c_void_p=c_void_p(int(self.winId())))
+        self._view.setWantsLayer_(True)
+
+        MediaToolbox.MTRegisterProfessionalVideoWorkflowFormatReaders()
 
     ########################################
     #
     ########################################
     def __check_ready(self):
         status = self._player.currentItem().status()
+        print(status)
         if status:
             self._timer.stop()
             if status != 1:

@@ -1,0 +1,5 @@
+pyqt5
+pyobjc-core
+pyobjc-framework-cocoa
+pyobjc-framework-avfoundation
+pyobjc-framework-mediatoolbox
