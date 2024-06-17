@@ -11,7 +11,7 @@ from dark import palette
 from myslider import MySlider
 
 APP_NAME = 'MediaPlayer'
-APP_VERSION = '0.1'
+APP_VERSION = '0.2'
 
 IS_WIN = sys.platform == 'win32'
 IS_MAC = sys.platform == 'darwin'
@@ -46,7 +46,8 @@ class Main(QMainWindow):
         super().__init__()
 
         if IS_MAC and IS_FROZEN:
-            app.fileOpened.connect(self.video_widget.load_media)
+            app.fileOpened.connect(lambda filename:
+                    self.video_widget.load_media(filename))
         self._duration = None
         self._fullscreen = False
 
@@ -78,8 +79,7 @@ class Main(QMainWindow):
             self.slider_volume.setValue(self.slider_volume.value() + 1))
         self.action_volume_down.triggered.connect(lambda:
             self.slider_volume.setValue(self.slider_volume.value() - 1))
-        self.action_toggle_mute.toggled.connect(lambda checked:
-            self.video_widget.set_volume(0 if checked else self.slider_volume.value() / 100))
+        self.action_toggle_mute.toggled.connect(self.video_widget.set_muted)
         self.action_about.triggered.connect(self.slot_about)
 
         # statusbar
@@ -89,7 +89,7 @@ class Main(QMainWindow):
         self.timeedit_statusbar.setFrame(False)
         self.timeedit_statusbar.setDisplayFormat('hh:mm:ss')
         self.timeedit_statusbar.setFixedWidth(58)
-        self.timeedit_statusbar.setFixedHeight(10)
+        self.timeedit_statusbar.setFixedHeight(12)
         self.statusbar.addPermanentWidget(self.timeedit_statusbar)
 
         # toolbar
@@ -101,7 +101,7 @@ class Main(QMainWindow):
         self.slider_volume.setFixedWidth(100)
         self.slider_volume.setRange(0, 100)
         self.slider_volume.valueChanged.connect(lambda value:
-            None if self.action_toggle_mute.isChecked() else self.video_widget.set_volume(value / 100))
+                self.video_widget.set_volume(value / 100))
         self.toolBar.addWidget(self.slider_volume)
 
         ag = QActionGroup(self)
@@ -200,8 +200,8 @@ class Main(QMainWindow):
     ########################################
     def slot_about(self):
         msg = ('<b>{} v{}</b><br>(c) 2024 59de44955ebd<br><br>'
-            'A simple media player for macOS and Windows, based on<br>'
-            'Python 3, PyQt5 and native system media frameworks<br>'
+            'A simple media player for macOS and Windows, based on '
+            'Python 3, PyQt5 and native system media frameworks '
             '(AVFoundation/DirectShow).<br>').format(APP_NAME, APP_VERSION)
         dialog = QMessageBox(QMessageBox.Information, 'About', msg, QMessageBox.Ok, parent=self)
         if IS_WIN:

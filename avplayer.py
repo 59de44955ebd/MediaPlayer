@@ -24,6 +24,9 @@ class VideoWidget(QWidget):
 
         self.filename = None
 
+        self._volume = 1.
+        self._muted = False
+
         self._player = None
         self._playerLayer = None
 
@@ -70,6 +73,7 @@ class VideoWidget(QWidget):
         self._playerLayer.setFrame_(NSMakeRect(0, 0, g.width(), g.height()))
         self._playerLayer.setAutoresizingMask_(18)  # kCALayerWidthSizable=2 | kCALayerHeightSizable=16
         self._view.layer().addSublayer_(self._playerLayer)
+        self._player.setVolume_(0 if self._muted else self._volume)
 
         self._timer.start()
 
@@ -144,17 +148,25 @@ class VideoWidget(QWidget):
     # 0..1
     ########################################
     def get_volume(self):
-        if self._player is None:
-            return 1.0
-        return self._player.volume()
+        return self._volume
 
     ########################################
     # 0..1
     ########################################
     def set_volume(self, volume: float):
+        self._volume = volume
         if self._player is None:
             return
-        self._player.setVolume_(float(volume))
+        if not self._muted:
+            self._player.setVolume_(float(volume))
+
+    ########################################
+    # 0..1
+    ########################################
+    def set_muted(self, flag: bool):
+        self._muted = flag
+        if self._player:
+            self._player.setVolume_(0 if flag else self._volume)
 
     ########################################
     #

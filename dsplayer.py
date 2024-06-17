@@ -21,6 +21,8 @@ class VideoWidget(QWidget):
         self.filename = None
         self._media_loaded = False
 
+        self._muted = False
+
         # make window background black
         self.setAutoFillBackground(True)
         p = self.palette()
@@ -33,6 +35,8 @@ class VideoWidget(QWidget):
             height=360,
             filter_dir=os.path.join(os.path.dirname(os.path.realpath(__file__)), 'resources', 'filters')
             )
+
+        self._volume = self._player.get_volume()
 
     ########################################
     #
@@ -104,13 +108,22 @@ class VideoWidget(QWidget):
     # 0..1
     ########################################
     def get_volume(self):
-        return self._player.get_volume()
+        return self._volume
 
     ########################################
     # 0..1
     ########################################
     def set_volume(self, volume: float):
-        self._player.set_volume(float(volume))
+        self._volume = volume
+        if not self._muted:
+            self._player.set_volume(float(volume))
+
+    ########################################
+    # 0..1
+    ########################################
+    def set_muted(self, flag: bool):
+        self._muted = flag
+        self._player.set_volume(0 if flag else self._volume)
 
     ########################################
     #
@@ -158,7 +171,6 @@ class VideoWidget(QWidget):
     ########################################
     def mouseDoubleClickEvent(self, e):
         self.doubleClicked.emit()
-
 
 	########################################
 	#
