@@ -158,6 +158,7 @@ class Main(QMainWindow):
     #
     ########################################
     def slot_ready(self, ok):
+        self.slider_time.setValue(0)
         if ok:
             has_video = self.video_widget.has_video()
             if has_video:
@@ -165,25 +166,26 @@ class Main(QMainWindow):
                 dh = self.height() - self.video_widget.height()
                 self.resize(int(w), int(h) + dh)  # resize window to video
             self._duration = self.video_widget.get_duration()
-            self.slider_time.setEnabled(True)
+            self.slider_time.setEnabled(self._duration > 0)
             self.action_toggle_fullscreen.setEnabled(has_video)
             self.action_toggle_play.setEnabled(True)
-            for action in self.toolBar.actions():
-                if action.objectName():
-                    action.setEnabled(True)
-            self._timer.start()
+            for action in (self.action_play, self.action_pause, self.action_stop):
+                action.setEnabled(True)
+            for action in (self.action_skip_back, self.action_step_back, self.action_step_forward, self.action_skip_forward):
+                action.setEnabled(self._duration > 0)
+            if self._duration:
+                self._timer.start()
             self.video_widget.play()
             self.action_play.setChecked(True)
             self.setWindowTitle(f'{os.path.basename(self.video_widget.filename)} - {APP_NAME}')
         else:
             self._timer.stop()
-            self.slider_time.setValue(0)
             self.slider_time.setEnabled(False)
             self.action_toggle_fullscreen.setEnabled(False)
             self.action_toggle_play.setEnabled(False)
-            for action in self.toolBar.actions():
-                if action.objectName():
-                    action.setEnabled(False)
+            for action in (self.action_play, self.action_pause, self.action_stop, self.action_skip_back,
+                    self.action_step_back, self.action_step_forward, self.action_skip_forward):
+                action.setEnabled(False)
             self.action_stop.setChecked(True)
             self.setWindowTitle(APP_NAME)
 

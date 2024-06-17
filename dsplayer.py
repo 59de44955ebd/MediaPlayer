@@ -83,7 +83,10 @@ class VideoWidget(QWidget):
     # as seconds
     ########################################
     def get_duration(self):
-        return self._player.get_duration() / 1000
+        try:
+            return self._player.get_duration() / 1000
+        except:
+            return 0
 
     ########################################
     #
