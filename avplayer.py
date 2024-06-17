@@ -48,7 +48,6 @@ class VideoWidget(QWidget):
     ########################################
     def __check_ready(self):
         status = self._player.currentItem().status()
-        print(status)
         if status:
             self._timer.stop()
             if status != 1:
@@ -101,9 +100,10 @@ class VideoWidget(QWidget):
     def get_natural_size(self):
         if self._player is None:
             return
-        tracks = self._player.currentItem().asset().tracksWithMediaType_(AVFoundation.AVMediaTypeVideo)
-        size = tracks[0].naturalSize()
-        return size.width, size.height
+        video_tracks = self._player.currentItem().asset().tracksWithMediaType_(AVFoundation.AVMediaTypeVideo)
+        if len(video_tracks):
+            size = video_tracks[0].naturalSize()
+            return size.width, size.height
 
     ########################################
     # as seconds
@@ -120,8 +120,9 @@ class VideoWidget(QWidget):
     def get_fps(self):
         if self._player is None:
             return
-        tracks = self._player.currentItem().asset().tracksWithMediaType_(AVFoundation.AVMediaTypeVideo)
-        return tracks[0].nominalFrameRate()
+        video_tracks = self._player.currentItem().asset().tracksWithMediaType_(AVFoundation.AVMediaTypeVideo)
+        if len(video_tracks):
+            return video_tracks[0].nominalFrameRate()
 
     ########################################
     #

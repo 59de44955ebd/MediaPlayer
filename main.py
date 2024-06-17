@@ -18,7 +18,7 @@ IS_MAC = sys.platform == 'darwin'
 if not IS_WIN and not IS_MAC:
     sys.exit(1)
 
-IS_FROZEN = getattr(sys, "frozen", False)
+IS_FROZEN = getattr(sys, 'frozen', False)
 if IS_FROZEN:
     if IS_WIN:
         RES_DIR = os.path.join(os.path.dirname(sys.executable), '_internal', 'resources')
@@ -46,14 +46,13 @@ class Main(QMainWindow):
         super().__init__()
 
         if IS_MAC and IS_FROZEN:
-            def _loaded(filename):
-                self.video_widget.load_media(filename)
-            app.fileOpened.connect(_loaded)
+            app.fileOpened.connect(self.video_widget.load_media)
         self._duration = None
         self._fullscreen = False
 
         if IS_WIN:
-            windll.dwmapi.DwmSetWindowAttribute(int(self.winId()), DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
+            windll.dwmapi.DwmSetWindowAttribute(int(self.winId()),
+                    DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
 
         QApplication.setStyle('Fusion')
         qApp.setPalette(palette)
@@ -200,13 +199,14 @@ class Main(QMainWindow):
     #
     ########################################
     def slot_about(self):
-        msg = ("<b>{} v{}</b><br>(c) 2024 59de44955ebd<br><br>"
-            "A simple media player for macOS and Windows, based on<br>"
-            "Python 3, PyQt5 and native system media frameworks<br>"
-            "(AVFoundation/DirectShow).<br>").format(APP_NAME, APP_VERSION)
+        msg = ('<b>{} v{}</b><br>(c) 2024 59de44955ebd<br><br>'
+            'A simple media player for macOS and Windows, based on<br>'
+            'Python 3, PyQt5 and native system media frameworks<br>'
+            '(AVFoundation/DirectShow).<br>').format(APP_NAME, APP_VERSION)
         dialog = QMessageBox(QMessageBox.Information, 'About', msg, QMessageBox.Ok, parent=self)
         if IS_WIN:
-            windll.dwmapi.DwmSetWindowAttribute(int(dialog.winId()), DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
+            windll.dwmapi.DwmSetWindowAttribute(int(dialog.winId()),
+                    DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
         dialog.exec()
 
     ########################################
@@ -251,13 +251,12 @@ class Main(QMainWindow):
         self.slot_toggle_fullscreen()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.excepthook = traceback.print_exception
     if IS_MAC and IS_FROZEN:
         class MyApplication(QApplication):
             fileOpened = pyqtSignal(str)
             def event(self, e):
-                #print(e.type())
                 if e.type() == QEvent.FileOpen:
                     self.fileOpened.emit(e.file())
                 return super().event(e)
