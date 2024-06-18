@@ -8,7 +8,6 @@ QMenuBar::item {
 QMenuBar::item:selected {
     background: #414141;
 }
-
 QMenu::separator {
 	background-color: #4e4e4e;
 	height: 1px;
@@ -40,5 +39,4 @@ QToolBar::separator {
 }
 QTimeEdit:disabled {
 	color: #bbb;
-	font-size: 18px;
 }
