@@ -46,7 +46,8 @@ class Main(QMainWindow):
         super().__init__()
 
         if IS_MAC and IS_FROZEN:
-            app.fileOpened.connect(self.video_widget.load_media)
+            app.fileOpened.connect(lambda filename:
+                    self.video_widget.load_media(filename))
         self._duration = None
         self._fullscreen = False
 
