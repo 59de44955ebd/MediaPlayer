@@ -15,6 +15,14 @@ del "dist\%APP_NAME%-x64-portable.7z" 2>nul
 
 echo.
 echo ****************************************
+echo Checking requirements...
+echo ****************************************
+
+pip install -r requirements_windows.txt
+pip install -r requirements_dist.txt
+
+echo.
+echo ****************************************
 echo Running pyinstaller...
 echo ****************************************
 

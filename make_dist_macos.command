@@ -1,12 +1,21 @@
 APP_NAME=MediaPlayer
 APP_ICON=app.icns
 
+cd "$(dirname "$0")"
+
 rm -R dist/$APP_NAME 2>/dev/null
 rm -R dist/$APP_NAME.app 2>/dev/null
 rm -R dist/$APP_NAME.dmg 2>/dev/null
 
+echo
+echo '****************************************'
+echo 'Checking requirements...'
+echo '****************************************'
 
-echo 
+pip install -r requirements_macos.txt
+pip install -r requirements_dist.txt
+
+echo
 echo '****************************************'
 echo 'Running pyinstaller...'
 echo '****************************************'
@@ -14,7 +23,7 @@ echo '****************************************'
 # pyinstaller --noupx -w -i "$APP_ICON" -n "$APP_NAME" -D main.py --exclude-module _bootlocale
 pyinstaller MediaPlayer_macos.spec
 
-echo 
+echo
 echo '****************************************'
 echo 'Copying resources...'
 echo '****************************************'
@@ -23,7 +32,7 @@ cp resources/main.ui "dist/$APP_NAME.app/Contents/Resources/"
 cp resources/main.rcc "dist/$APP_NAME.app/Contents/Resources/"
 cp resources/style.css "dist/$APP_NAME.app/Contents/Resources/"
 
-echo 
+echo
 echo '****************************************'
 echo 'Optimizing dist folder...'
 echo '****************************************'
@@ -70,7 +79,7 @@ rm -R dist/$APP_NAME.app/Contents/Frameworks/PyQt5/Qt5/plugins/platforms/libqmin
 rm -R dist/$APP_NAME.app/Contents/Frameworks/PyQt5/Qt5/plugins/platforms/libqoffscreen.dylib
 rm -R dist/$APP_NAME.app/Contents/Frameworks/PyQt5/Qt5/plugins/platforms/libqwebgl.dylib
 
-# echo 
+# echo
 # echo '****************************************'
 # echo 'Creating ZIP...'
 # echo '****************************************'
@@ -79,7 +88,7 @@ rm -R dist/$APP_NAME.app/Contents/Frameworks/PyQt5/Qt5/plugins/platforms/libqweb
 # zip -q -r $APP_NAME-macos.zip $APP_NAME.app
 # cd ..
 
-echo 
+echo
 echo '****************************************'
 echo 'Creating DMG...'
 echo '****************************************'
@@ -89,7 +98,7 @@ python make_dmg.py "dist/dmg" "dist/$APP_NAME.dmg" "$APP_NAME"
 mv dist/dmg/$APP_NAME.app dist/
 rm -R dist/dmg
 
-echo 
+echo
 echo '****************************************'
 echo 'Done.'
 echo '****************************************'
