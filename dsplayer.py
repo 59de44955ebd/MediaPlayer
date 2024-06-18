@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from dshow import Player
 
@@ -45,6 +46,10 @@ class VideoWidget(QWidget):
         if self._media_loaded:
             self.close_media()
         try:
+            if filename.lower().endswith('.lnk'):
+                # simple but slow (and blocking)
+                filename = subprocess.check_output(f"powershell -command (new-object -com wscript.shell).CreateShortCut('{filename}').Targetpath",
+                                shell=True).strip().decode()
             ok = self._player.load_file(filename)
             if ok:
                 self.play()

@@ -133,7 +133,10 @@ class Main(QMainWindow):
         self.setMinimumHeight(self.height() - self.video_widget.height())
 
         if len(sys.argv) > 1:
-            self.video_widget.load_media(sys.argv[1])
+            if IS_WIN and sys.argv[1].lower().endswith('.lnk'):
+                QTimer.singleShot(100, lambda: self.video_widget.load_media(sys.argv[1]))
+            else:
+                self.video_widget.load_media(sys.argv[1])
 
     ########################################
     #

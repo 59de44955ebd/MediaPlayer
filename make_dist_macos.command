@@ -34,7 +34,7 @@ cp resources/style.css "dist/$APP_NAME.app/Contents/Resources/"
 
 echo
 echo '****************************************'
-echo 'Optimizing dist folder...'
+echo 'Optimizing application...'
 echo '****************************************'
 
 rm dist/$APP_NAME.app/Contents/Frameworks/libcrypto.3.dylib
