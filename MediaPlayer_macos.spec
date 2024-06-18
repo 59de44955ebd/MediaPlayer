@@ -49,7 +49,7 @@ app = BUNDLE(
     icon='app.icns',
     bundle_identifier=None,
     info_plist={
-        'CFBundleShortVersionString': '0.2.0',
+        'CFBundleShortVersionString': '0.3.0',
         'Associations': '3gp avi m2ts m2v mov mp4 mpg mpeg mts mxf ts vob wav mp3 aif aiff',
         'CFBundleDocumentTypes': [
             {

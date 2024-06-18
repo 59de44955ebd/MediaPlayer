@@ -11,7 +11,7 @@ from dark import palette
 from myslider import MySlider
 
 APP_NAME = 'MediaPlayer'
-APP_VERSION = '0.2'
+APP_VERSION = '0.3'
 
 IS_WIN = sys.platform == 'win32'
 IS_MAC = sys.platform == 'darwin'
