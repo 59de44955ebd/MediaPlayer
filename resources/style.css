@@ -1,3 +1,14 @@
+QMenuBar {
+    background-color: #2b2b2b;
+}
+QMenuBar::item {
+    padding: 2px 5px;
+    background: transparent;
+}
+QMenuBar::item:selected {
+    background: #414141;
+}
+
 QMenu::separator {
 	background-color: #4e4e4e;
 	height: 1px;
@@ -10,8 +21,11 @@ QMenu {
 QMenu::item:disabled {
     background-color: transparent;
 }
+QMenu::item:selected {
+    background-color: #414141;
+}
 QToolBar{
-	border: 1px solid #4e4e4e;
+	border: 1px solid #303030;
 	border-left: none;
 	border-right: none;
 }
@@ -20,7 +34,11 @@ QToolButton:checked {
 	border-color: #636363;
 }
 QToolBar::separator {
-	background-color: #4e4e4e;
+	background-color: #303030;
 	width: 1px;
 	margin: 3px;
+}
+QTimeEdit:disabled {
+	color: #bbb;
+	font-size: 18px;
 }

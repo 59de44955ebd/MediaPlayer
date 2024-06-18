@@ -46,8 +46,7 @@ class Main(QMainWindow):
         super().__init__()
 
         if IS_MAC and IS_FROZEN:
-            app.fileOpened.connect(lambda filename:
-                    self.video_widget.load_media(filename))
+            app.fileOpened.connect(self.video_widget.load_media)
         self._duration = None
         self._fullscreen = False
 
@@ -90,6 +89,7 @@ class Main(QMainWindow):
         self.timeedit_statusbar.setDisplayFormat('hh:mm:ss')
         self.timeedit_statusbar.setFixedWidth(58)
         self.timeedit_statusbar.setFixedHeight(12)
+        self.timeedit_statusbar.setVisible(False)
         self.statusbar.addPermanentWidget(self.timeedit_statusbar)
 
         # toolbar
@@ -119,7 +119,7 @@ class Main(QMainWindow):
         self.video_widget.doubleClicked.connect(self.slot_double_clicked)
 
         self.slider_time.sliderMoved.connect(lambda value:
-                self.video_widget.seek_to_time(value / 1000 * self._duration) if self._duration else None)
+                self.video_widget.seek_to_time(value / 10000 * self._duration) if self._duration else None)
 
         self._timer = QTimer(self)
         self._timer.setInterval(TIME_DISPLAY_UPDATE_PERIOD)
@@ -167,6 +167,7 @@ class Main(QMainWindow):
                 self.resize(int(w), int(h) + dh)  # resize window to video
             self._duration = self.video_widget.get_duration()
             self.slider_time.setEnabled(self._duration > 0)
+            self.timeedit_statusbar.setVisible(self._duration > 0)
             self.action_toggle_fullscreen.setEnabled(has_video)
             self.action_toggle_play.setEnabled(True)
             for action in (self.action_play, self.action_pause, self.action_stop):
@@ -181,6 +182,7 @@ class Main(QMainWindow):
         else:
             self._timer.stop()
             self.slider_time.setEnabled(False)
+            self.timeedit_statusbar.setVisible(False)
             self.action_toggle_fullscreen.setEnabled(False)
             self.action_toggle_play.setEnabled(False)
             for action in (self.action_play, self.action_pause, self.action_stop, self.action_skip_back,
@@ -216,7 +218,7 @@ class Main(QMainWindow):
     ########################################
     def slot_update_time(self):
         if self._duration:
-            self.slider_time.setValue(int(1000 * self.video_widget.get_time() / self._duration))
+            self.slider_time.setValue(int(10000 * self.video_widget.get_time() / self._duration))
             self.timeedit_statusbar.setTime(QTime(0, 0).addSecs(int(self.video_widget.get_time())))
 
     ########################################

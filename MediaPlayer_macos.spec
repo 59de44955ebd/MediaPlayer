@@ -50,12 +50,13 @@ app = BUNDLE(
     bundle_identifier=None,
     info_plist={
         'CFBundleShortVersionString': '0.2.0',
-        'Associations': 'mp4 avi mpg m2v mxf wav mp3 aif aiff',
+        'Associations': '3gp avi m2ts m2v mov mp4 mpg mpeg mts mxf ts vob wav mp3 aif aiff',
         'CFBundleDocumentTypes': [
             {
-                'CFBundleTypeExtensions': ['mp4', 'avi', 'mpg', 'm2v', 'mxf', 'wav', 'mp3', 'aif', 'aiff'],
+                'CFBundleTypeExtensions': ['3gp', 'avi', 'm2ts', 'm2v', 'mov', 'mp4', 'mpg', 'mpeg', 'mts', 'mxf', 'ts', 'vob', 'wav', 'mp3', 'aif', 'aiff'],
                 'CFBundleTypeRole': 'Viewer'
             }
         ]
     },
 )
+
