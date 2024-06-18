@@ -1,10 +1,14 @@
 import os
-import subprocess
-
-from dshow import Player
 
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QWidget
+
+from dshow import Player
+
+# completely optional
+SUPPORT_LNK_FILES = True
+if SUPPORT_LNK_FILES:
+    from lnk import get_lnk_target_path
 
 
 class VideoWidget(QWidget):
@@ -21,7 +25,6 @@ class VideoWidget(QWidget):
 
         self.filename = None
         self._media_loaded = False
-
         self._muted = False
 
         # make window background black
@@ -46,10 +49,8 @@ class VideoWidget(QWidget):
         if self._media_loaded:
             self.close_media()
         try:
-            if filename.lower().endswith('.lnk'):
-                # simple but slow (and blocking)
-                filename = subprocess.check_output(f"powershell -command (new-object -com wscript.shell).CreateShortCut('{filename}').Targetpath",
-                                shell=True).strip().decode()
+            if SUPPORT_LNK_FILES and filename.lower().endswith('.lnk'):
+                filename = get_lnk_target_path(filename)
             ok = self._player.load_file(filename)
             if ok:
                 self.play()
