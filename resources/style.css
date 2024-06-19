@@ -37,7 +37,7 @@ QToolBar::separator {
 	width: 1px;
 	margin: 3px;
 }
-QLabel {
-	font-family: "Cascadia Code", "Courier New";
+QStatusBar QLabel {
+	font-family: "Courier New";
 	font-size: 11px;
 }
