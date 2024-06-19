@@ -54,9 +54,8 @@ class Main(QMainWindow):
         self._time_format = 'hh:mm:ss'
         self._show_msec = False
         self._fullscreen = False
-        self._last_play_toggle_time = 0
-
         if IS_WIN:
+            self._last_play_toggle_time = 0
             windll.dwmapi.DwmSetWindowAttribute(int(self.winId()),
                     DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
 
@@ -235,10 +234,11 @@ class Main(QMainWindow):
     ########################################
     def slot_toggle_playback(self):
         # fixes an issue with DirectShow's message drain sending 2 key events simultaneously
-        t = time.time()
-        if t - self._last_play_toggle_time < .01:
-            return
-        self._last_play_toggle_time = t
+        if IS_WIN:
+            t = time.time()
+            if t - self._last_play_toggle_time < .01:
+                return
+            self._last_play_toggle_time = t
         is_playing = self.video_widget.toggle_playback()
         if is_playing is None:
             return
