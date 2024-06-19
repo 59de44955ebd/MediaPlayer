@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import traceback
 
 from PyQt5.QtCore import Qt, QResource, QTimer, QTime, QEvent, pyqtSignal
@@ -53,6 +54,7 @@ class Main(QMainWindow):
         self._time_format = 'hh:mm:ss'
         self._show_msec = False
         self._fullscreen = False
+        self._last_play_toggle_time = 0
 
         if IS_WIN:
             windll.dwmapi.DwmSetWindowAttribute(int(self.winId()),
@@ -152,6 +154,7 @@ class Main(QMainWindow):
     ########################################
     def dropEvent(self, e):
         self.video_widget.load_media(e.mimeData().urls()[0].toLocalFile())
+        self.activateWindow()
 
     ########################################
     #
@@ -201,6 +204,7 @@ class Main(QMainWindow):
         filename, _ = QFileDialog.getOpenFileName(self, 'Select media file')
         if filename:
             self.video_widget.load_media(filename)
+            self.activateWindow()
 
     ########################################
     #
@@ -230,10 +234,15 @@ class Main(QMainWindow):
     #
     ########################################
     def slot_toggle_playback(self):
-        state = self.video_widget.toggle_playback()
-        if state is None:
+        # fixes an issue with DirectShow's message drain sending 2 key events simultaneously
+        t = time.time()
+        if t - self._last_play_toggle_time < .01:
             return
-        if state == 1:
+        self._last_play_toggle_time = t
+        is_playing = self.video_widget.toggle_playback()
+        if is_playing is None:
+            return
+        if is_playing:
             self.action_play.setChecked(True)
         else:
             self.action_pause.setChecked(True)

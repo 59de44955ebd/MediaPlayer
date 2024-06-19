@@ -471,14 +471,16 @@ class Player():
                 return SUCCEEDED(self._video_window.SetWindowPosition(0, 0, w, h))
 
     ########################################
-    #
+    # State_Stopped = 0,
+    # State_Paused = 1
+    # State_Running = 2
     ########################################
     def get_state(self):
         if self._media_control:
             return self._media_control.getState(10000)
 
     ########################################
-    # returns HRESULT
+    #
     ########################################
     def pause(self):
         if self._media_control is None:
@@ -486,7 +488,7 @@ class Player():
         self._media_control.Pause()
 
     ########################################
-    # returns HRESULT
+    #
     ########################################
     def play(self):
         if self._media_control is None:
@@ -503,7 +505,7 @@ class Player():
             return self.play()
 
     ########################################
-    # returns HRESULT
+    #
     ########################################
     def stop(self):
         if self._media_control is None:

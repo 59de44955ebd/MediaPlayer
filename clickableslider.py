@@ -1,3 +1,8 @@
+'''
+Implemenst a slider that "jumps" to the corresponding position if clicked outside the knob,
+and then follows the mouse while the left mouse button is pressed.
+'''
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QSlider, QStyleOptionSlider, QStyle
 

@@ -110,7 +110,7 @@ class VideoWidget(QWidget):
             return size.width, size.height
 
     ########################################
-    # as seconds
+    # as seconds (floaz)
     ########################################
     def get_duration(self):
         if self._player is None:
@@ -133,7 +133,7 @@ class VideoWidget(QWidget):
     ########################################
     def has_video(self):
         if self._player is None:
-            return
+            return False
         return len(self._player.currentItem().asset().tracksWithMediaType_(AVFoundation.AVMediaTypeVideo)) > 0
 
     ########################################
@@ -141,17 +141,17 @@ class VideoWidget(QWidget):
     ########################################
     def has_audio(self):
         if self._player is None:
-            return
+            return False
         return len(self._player.currentItem().asset().tracksWithMediaType_(AVFoundation.AVMediaTypeAudio)) > 0
 
     ########################################
-    # 0..1
+    # 0..1 (float)
     ########################################
     def get_volume(self):
         return self._volume
 
     ########################################
-    # 0..1
+    # 0..1 (float)
     ########################################
     def set_volume(self, volume: float):
         self._volume = volume
@@ -161,7 +161,7 @@ class VideoWidget(QWidget):
             self._player.setVolume_(float(volume))
 
     ########################################
-    # 0..1
+    #
     ########################################
     def set_muted(self, flag: bool):
         self._muted = flag
@@ -169,7 +169,7 @@ class VideoWidget(QWidget):
             self._player.setVolume_(0 if flag else self._volume)
 
     ########################################
-    #
+    # as seconds (float)
     ########################################
     def seek_to_time(self, sec: float):
         if self._player is None:
@@ -179,7 +179,7 @@ class VideoWidget(QWidget):
         self._player.seekToTime_(cm)
 
     ########################################
-    # as seconds
+    # as seconds (float)
     ########################################
     def get_time(self):
         if self._player is None:
@@ -188,7 +188,7 @@ class VideoWidget(QWidget):
         return cm.value / cm.timescale if cm.timescale else 0
 
     ########################################
-    # NEW
+    #
     ########################################
     def play(self):
         if self._player is None:
@@ -196,7 +196,7 @@ class VideoWidget(QWidget):
         self._player.setRate_(1.0)
 
     ########################################
-    # NEW
+    #
     ########################################
     def pause(self):
         if self._player is None:
@@ -204,12 +204,14 @@ class VideoWidget(QWidget):
         self._player.setRate_(0.0)
 
     ########################################
-    # NEW
+    # returns is_playing as bool
     ########################################
     def toggle_playback(self):
         if self._player is None:
-            return
-        self._player.setRate_(1 - self._player.rate())
+            return False
+        rate = 1 - self._player.rate()
+        self._player.setRate_(rate)
+        return rate > 0
 
     ########################################
     #

@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget,  QApplication
 
 from dshow import Player
 
@@ -86,7 +86,7 @@ class VideoWidget(QWidget):
             return self._player.get_size()
 
     ########################################
-    # as seconds
+    # as seconds (float)
     ########################################
     def get_duration(self):
         try:
@@ -114,13 +114,13 @@ class VideoWidget(QWidget):
         return self._player.has_audio()
 
     ########################################
-    # 0..1
+    # 0..1 (float)
     ########################################
     def get_volume(self):
         return self._volume
 
     ########################################
-    # 0..1
+    # 0..1 (float)
     ########################################
     def set_volume(self, volume: float):
         self._volume = volume
@@ -128,46 +128,47 @@ class VideoWidget(QWidget):
             self._player.set_volume(float(volume))
 
     ########################################
-    # 0..1
+    #
     ########################################
     def set_muted(self, flag: bool):
         self._muted = flag
         self._player.set_volume(0 if flag else self._volume)
 
     ########################################
-    #
+    # as seconds (float)
     ########################################
     def seek_to_time(self, sec: float):
         if self._media_loaded:
             self._player.set_time(sec * 1000)
 
     ########################################
-    # as seconds
+    # as seconds (float)
     ########################################
     def get_time(self):
         return self._player.get_time() / 1000 if self._media_loaded else 0
 
     ########################################
-    # NEW
+    #
     ########################################
     def play(self):
         if self._media_loaded:
             self._player.play()
 
     ########################################
-    # NEW
+    #
     ########################################
     def pause(self):
         if self._media_loaded:
             self._player.pause()
 
     ########################################
-    # NEW
+    # returns is_playing as bool
     ########################################
     def toggle_playback(self):
-        if self._media_loaded:
-            self._player.toggle_playback()
-            return self._player.get_state() - 1
+        if not self._media_loaded:
+            return False
+        self._player.toggle_playback()
+        return self._player.get_state() == 2
 
     ########################################
     #

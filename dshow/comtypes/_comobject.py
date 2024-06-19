@@ -12,8 +12,8 @@ from dshow.comtypes.hresult import (
     DISP_E_BADINDEX, DISP_E_MEMBERNOTFOUND, E_FAIL, E_NOINTERFACE,
     E_INVALIDARG, E_NOTIMPL, RPC_E_CHANGED_MODE, S_FALSE, S_OK
 )
-#from dshow.comtypes.typeinfo import IProvideClassInfo, IProvideClassInfo2
 
+__all__ = ["COMObject"]
 
 logger = logging.getLogger(__name__)
 _debug = logger.debug
@@ -766,5 +766,3 @@ class COMObject(object):
     # IPersist interface
     def IPersist_GetClassID(self):
         return self._reg_clsid_
-
-__all__ = ["COMObject"]
