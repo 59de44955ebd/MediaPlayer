@@ -37,6 +37,3 @@ QToolBar::separator {
 	width: 1px;
 	margin: 3px;
 }
-QTimeEdit:disabled {
-	color: #bbb;
-}

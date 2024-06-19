@@ -12,7 +12,7 @@ from dshow.comtypes.hresult import (
     DISP_E_BADINDEX, DISP_E_MEMBERNOTFOUND, E_FAIL, E_NOINTERFACE,
     E_INVALIDARG, E_NOTIMPL, RPC_E_CHANGED_MODE, S_FALSE, S_OK
 )
-from dshow.comtypes.typeinfo import IProvideClassInfo, IProvideClassInfo2
+#from dshow.comtypes.typeinfo import IProvideClassInfo, IProvideClassInfo2
 
 
 logger = logging.getLogger(__name__)
@@ -403,15 +403,15 @@ class COMObject(object):
         interfaces = tuple(self._com_interfaces_)
         if ISupportErrorInfo not in interfaces:
             interfaces += (ISupportErrorInfo,)
-        if hasattr(self, "_reg_typelib_"):
-            from dshow.comtypes.typeinfo import LoadRegTypeLib
-            self._COMObject__typelib = LoadRegTypeLib(*self._reg_typelib_)
-            if hasattr(self, "_reg_clsid_"):
-                if IProvideClassInfo not in interfaces:
-                    interfaces += (IProvideClassInfo,)
-                if hasattr(self, "_outgoing_interfaces_") and \
-                   IProvideClassInfo2 not in interfaces:
-                    interfaces += (IProvideClassInfo2,)
+#        if hasattr(self, "_reg_typelib_"):
+#            from dshow.comtypes.typeinfo import LoadRegTypeLib
+#            self._COMObject__typelib = LoadRegTypeLib(*self._reg_typelib_)
+#            if hasattr(self, "_reg_clsid_"):
+#                if IProvideClassInfo not in interfaces:
+#                    interfaces += (IProvideClassInfo,)
+#                if hasattr(self, "_outgoing_interfaces_") and \
+#                   IProvideClassInfo2 not in interfaces:
+#                    interfaces += (IProvideClassInfo2,)
         if hasattr(self, "_reg_clsid_"):
             if IPersist not in interfaces:
                 interfaces += (IPersist,)

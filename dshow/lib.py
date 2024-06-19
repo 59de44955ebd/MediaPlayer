@@ -2,6 +2,7 @@
 typelib_path = 'DirectShow.tlb'
 #_lcid = 0 # change this if required
 
+import sys
 from ctypes import *
 from ctypes.wintypes import (_FILETIME, _LARGE_INTEGER, _ULARGE_INTEGER, tagRECT, tagSIZE,
         BYTE, BOOL, WORD, DWORD, INT, UINT, FLOAT, COLORREF, LONG, ULONG, HWND, HDC, LPCOLESTR, LCID, LPVOID, RECT)
@@ -9,10 +10,11 @@ from dshow.comtypes import (BSTR, COMMETHOD, CoClass, GUID, IPersist, IUnknown, 
         _COSERVERINFO, dispid, helpstring, tagBIND_OPTS2, wireHWND)
 from dshow.comtypes.automation import VARIANT, IDispatch
 from dshow.comtypes.persist import IPropertyBag, IErrorLog
-from dshow.comtypes.typeinfo import ULONG_PTR
 
+ULONG_PTR = c_uint64 if sys.maxsize > 2**32 else c_ulong
 WSTRING = c_wchar_p
 LONG_PTR = c_int
+
 
 # values for enumeration '_AM_INTF_SEARCH_FLAGS'
 AM_INTF_SEARCH_INPUT_PIN = 1

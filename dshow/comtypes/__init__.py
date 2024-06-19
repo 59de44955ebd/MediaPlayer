@@ -1368,3 +1368,32 @@ from dshow.comtypes._meta import _coclass_meta
 class CoClass(COMObject, metaclass=_coclass_meta):
     pass
 ################################################################
+
+def _manage(obj, clsid, interface):
+    obj.__dict__['__clsid'] = str(clsid)
+    return obj
+
+def CreateObject(progid,                  # which object to create
+                 clsctx=None,             # how to create the object
+                 interface=None):         # the interface we want
+    clsid = GUID.from_progid(progid)
+    obj = CoCreateInstance(clsid, clsctx=clsctx, interface=interface)
+    return _manage(obj, clsid, interface=interface)
+
+
+################################################################
+# Interfaces
+class IClassFactory(IUnknown):
+    _iid_ = GUID("{00000001-0000-0000-C000-000000000046}")
+    _methods_ = [
+        STDMETHOD(HRESULT, "CreateInstance",
+                           [POINTER(IUnknown),
+                            POINTER(GUID),
+                            POINTER(c_void_p)]),
+        STDMETHOD(HRESULT, "LockServer",
+                           [c_int])]
+
+    def CreateInstance(self, punkouter=None, interface=None):
+        obj = POINTER(IUnknown)()
+        self.__com_CreateInstance(punkouter, IUnknown._iid_, byref(obj))
+        return obj

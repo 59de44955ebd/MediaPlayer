@@ -3,7 +3,6 @@ import datetime
 import decimal
 
 from ctypes import *
-#from ctypes import _Pointer
 from _ctypes import CopyComPointer
 from ctypes.wintypes import DWORD, LONG, UINT, VARIANT_BOOL, WCHAR, WORD
 
@@ -11,13 +10,8 @@ from dshow.comtypes import IUnknown, GUID, IID, STDMETHOD, BSTR, COMMETHOD, COME
 from dshow.comtypes.hresult import *
 from dshow.comtypes.patcher import Patch
 
-# REMOVED TO SAVE A LOT OF MEMORY!!!
-#from comtypes import npsupport
-#try:
-#    from comtypes import _safearray
-#except (ImportError, AttributeError):
-#    class _safearray(object):
-#        tagSAFEARRAY = None
+__all__ = ["Variant"]
+
 
 class _safearray(object):
     tagSAFEARRAY = None

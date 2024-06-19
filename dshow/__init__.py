@@ -2,17 +2,19 @@ import os, struct, sys
 from math import log
 from uuid import UUID
 
-from ctypes import POINTER, byref, cast, c_int, c_void_p, create_string_buffer, windll, oledll, pointer, c_ubyte
+from ctypes import POINTER, byref, cast, c_int, c_void_p, create_string_buffer, windll, oledll, pointer, c_ubyte, c_char_p
 from ctypes.wintypes import LONG, RECT, DWORD
 
-from winapp.const import WS_CHILD, WS_CLIPCHILDREN, WS_CLIPSIBLINGS
-
-from dshow.comtypes.client import CreateObject
-from dshow.comtypes.server import IClassFactory
+from dshow.comtypes import GUID, STDMETHOD, HRESULT, IUnknown, CoCreateInstance, CreateObject, IClassFactory
 from dshow.comtypes.hresult import *
 from dshow.lib import *
 
-Winmm = windll.Winmm
+
+WS_CHILD = 1073741824
+WS_CLIPSIBLINGS = 67108864
+WS_CLIPCHILDREN = 33554432
+
+winmm = windll.Winmm
 
 ########################################
 #
@@ -34,7 +36,8 @@ def _create_object_from_path(clsid, dll_filename, interface=IBaseFilter):
 #      [in]  REFIID   riid,
 #      [out] LPVOID   *ppv
 #    );
-    hr = my_dll.DllGetClassObject(clsid_class, iclassfactory, byref(factory_ptr))
+    my_dll.DllGetClassObject.argtypes = (c_char_p, c_char_p, LPVOID)
+    my_dll.DllGetClassObject(clsid_class, iclassfactory, byref(factory_ptr))
     ptr_icf = POINTER(IClassFactory)(factory_ptr.value)
     pUnk = ptr_icf.CreateInstance()
     return pUnk.QueryInterface(interface)
@@ -605,12 +608,12 @@ class Player():
     def get_volume(self):
         if self._use_master_volume:
             d = DWORD()
-            Winmm.waveOutGetVolume(0, byref(d))
+            winmm.waveOutGetVolume(0, byref(d))
             self._volume = (d.value & 0xFFFF) / 0xFFFF
         return self._volume
 
     ########################################
-    # 0..1 => -10000..0
+    # 0..1 => 0..0xffffffff or -10000..0
     ########################################
     def set_volume(self, v, update_state_=True):
         v = max(0, min(1, v))
@@ -618,7 +621,7 @@ class Player():
             self._volume = v
         if self._use_master_volume:
             v = int(0xFFFF * v)
-            Winmm.waveOutSetVolume(0, v | v << 16)
+            winmm.waveOutSetVolume(0, v | v << 16)
         else:
             if self._has_audio:
                 if self._volume == 0:

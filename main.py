@@ -3,12 +3,12 @@ import sys
 import traceback
 
 from PyQt5.QtCore import Qt, QResource, QTimer, QTime, QEvent, pyqtSignal
-from PyQt5.QtWidgets import (qApp, QMainWindow, QApplication, QWidget, QToolButton, QSlider,
-        QSizePolicy, QActionGroup, QTimeEdit, QAbstractSpinBox, QMessageBox, QFileDialog)
+from PyQt5.QtWidgets import (qApp, QMainWindow, QApplication, QWidget, QToolButton, QSlider, QLabel,
+        QSizePolicy, QActionGroup, QMessageBox, QFileDialog)
 from PyQt5 import uic
 
 from dark import palette
-from myslider import MySlider
+from clickableslider import ClickableSlider
 
 APP_NAME = 'MediaPlayer'
 APP_VERSION = '0.3'
@@ -48,7 +48,10 @@ class Main(QMainWindow):
         if IS_MAC and IS_FROZEN:
             app.fileOpened.connect(lambda filename:
                     self.video_widget.load_media(filename))
-        self._duration = None
+        self._duration = 0
+        self._duration_str = ''
+        self._time_format = 'hh:mm:ss'
+        self._show_msec = False
         self._fullscreen = False
 
         if IS_WIN:
@@ -68,6 +71,7 @@ class Main(QMainWindow):
         self.action_close.triggered.connect(lambda:
             self.video_widget.close_media() or self.slot_ready(False))
         self.action_toggle_fullscreen.triggered.connect(self.slot_toggle_fullscreen)
+        self.action_toggle_show_msecs.triggered.connect(self.slot_toggle_show_msecs)
         self.action_toggle_play.triggered.connect(self.slot_toggle_playback)
         self.action_step_forward.triggered.connect(lambda: self.video_widget.step(1))
         self.action_step_back.triggered.connect(lambda: self.video_widget.step(-1))
@@ -83,22 +87,16 @@ class Main(QMainWindow):
         self.action_about.triggered.connect(self.slot_about)
 
         # statusbar
-        self.timeedit_statusbar = QTimeEdit()
-        self.timeedit_statusbar.setEnabled(False)
-        self.timeedit_statusbar.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.timeedit_statusbar.setFrame(False)
-        self.timeedit_statusbar.setDisplayFormat('hh:mm:ss')
-        self.timeedit_statusbar.setFixedWidth(58)
-        self.timeedit_statusbar.setFixedHeight(12)
-        self.timeedit_statusbar.setVisible(False)
-        self.statusbar.addPermanentWidget(self.timeedit_statusbar)
+        self.label_statusbar = QLabel()
+        self.label_statusbar.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.statusbar.addPermanentWidget(self.label_statusbar)
 
         # toolbar
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.toolBar.addWidget(spacer)
         self.toolBar.addAction(self.action_toggle_mute)
-        self.slider_volume = MySlider(Qt.Horizontal)
+        self.slider_volume = ClickableSlider(Qt.Horizontal)
         self.slider_volume.setFixedWidth(100)
         self.slider_volume.setRange(0, 100)
         self.slider_volume.valueChanged.connect(lambda value:
@@ -167,23 +165,27 @@ class Main(QMainWindow):
                 dh = self.height() - self.video_widget.height()
                 self.resize(int(w), int(h) + dh)  # resize window to video
             self._duration = self.video_widget.get_duration()
+            if self._duration > 0:
+                self._time_format = ('hh:mm:ss' if self._duration >= 3600 else 'mm:ss') + ('.zzz' if self._show_msec else '')
+                self._duration_str = ' / ' + QTime(0, 0).addMSecs(int(1000 * self._duration)).toString(self._time_format)
+            else:
+                self._time_format = 'hh:mm:ss' + ('.zzz' if self._show_msec else '')
             self.slider_time.setEnabled(self._duration > 0)
-            self.timeedit_statusbar.setVisible(self._duration > 0)
+            self.label_statusbar.setVisible(True) #self._duration > 0)
             self.action_toggle_fullscreen.setEnabled(has_video)
             self.action_toggle_play.setEnabled(True)
             for action in (self.action_play, self.action_pause, self.action_stop):
                 action.setEnabled(True)
             for action in (self.action_skip_back, self.action_step_back, self.action_step_forward, self.action_skip_forward):
                 action.setEnabled(self._duration > 0)
-            if self._duration:
-                self._timer.start()
+            self._timer.start()
             self.video_widget.play()
             self.action_play.setChecked(True)
             self.setWindowTitle(f'{os.path.basename(self.video_widget.filename)} - {APP_NAME}')
         else:
             self._timer.stop()
             self.slider_time.setEnabled(False)
-            self.timeedit_statusbar.setVisible(False)
+            self.label_statusbar.setVisible(False)
             self.action_toggle_fullscreen.setEnabled(False)
             self.action_toggle_play.setEnabled(False)
             for action in (self.action_play, self.action_pause, self.action_stop, self.action_skip_back,
@@ -218,9 +220,11 @@ class Main(QMainWindow):
     #
     ########################################
     def slot_update_time(self):
-        if self._duration:
+        if self._duration > 0:
             self.slider_time.setValue(int(10000 * self.video_widget.get_time() / self._duration))
-            self.timeedit_statusbar.setTime(QTime(0, 0).addSecs(int(self.video_widget.get_time())))
+            self.label_statusbar.setText(QTime(0, 0).addMSecs(int(1000 * self.video_widget.get_time())).toString(self._time_format) + self._duration_str)
+        else:
+            self.label_statusbar.setText(QTime(0, 0).addMSecs(int(1000 * self.video_widget.get_time())).toString(self._time_format))
 
     ########################################
     #
@@ -247,6 +251,17 @@ class Main(QMainWindow):
         else:
             self.video_widget.showNormal()
             self.centralwidget.layout().insertWidget(0, self.video_widget)
+
+    ########################################
+    #
+    ########################################
+    def slot_toggle_show_msecs(self, flag):
+        self._show_msec = flag
+        if self._duration > 0:
+            self._time_format = ('hh:mm:ss' if self._duration >= 3600 else 'mm:ss') + ('.zzz' if self._show_msec else '')
+            self._duration_str = ' / ' + QTime(0, 0).addMSecs(int(1000 * self._duration)).toString(self._time_format)
+        else:
+            self._time_format = 'hh:mm:ss' + ('.zzz' if self._show_msec else '')
 
     ########################################
     #
