@@ -11,7 +11,7 @@ from dark import palette
 from clickableslider import ClickableSlider
 
 APP_NAME = 'MediaPlayer'
-APP_VERSION = '0.3'
+APP_VERSION = '0.4'
 
 IS_WIN = sys.platform == 'win32'
 IS_MAC = sys.platform == 'darwin'
