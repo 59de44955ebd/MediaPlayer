@@ -17,19 +17,26 @@ class ClickableSlider(QSlider):
     ########################################
     #
     ########################################
+    def __set(self, event):
+        maxi, mini = self.maximum(), self.minimum()
+        if self.orientation() == Qt.Horizontal:
+            val = min(maxi, max(mini, int(mini + ((maxi - mini) * (event.x() - self._handle_size // 2)) / (self.width() - self._handle_size))))
+        else:
+            val = min(maxi, max(mini, int(maxi - ((maxi - mini) * (event.y() - self._handle_size // 2)) / (self.height() - self._handle_size))))
+        if self.invertedAppearance():
+            val = maxi - val
+        self.setValue(val)
+        self.sliderMoved.emit(val)
+        event.accept()
+
+    ########################################
+    #
+    ########################################
     def mousePressEvent (self, event):
         sr = self.style().subControlRect(QStyle.CC_Slider, self._opt, QStyle.SC_SliderHandle, self)
         self.is_pressed_outside = event.button() == Qt.LeftButton and not sr.contains(event.pos())
         if self.is_pressed_outside:
-            if self.orientation() == Qt.Horizontal:
-                newVal = int(self.minimum() + ((self.maximum() - self.minimum()) * (event.x() - self._handle_size // 2)) / (self.width() - self._handle_size))
-            else:
-                newVal = int(self.maximum() - ((self.maximum() - self.minimum()) * (event.y() - self._handle_size // 2)) / (self.height() - self._handle_size))
-            if self.invertedAppearance():
-                newVal = self.maximum() - newVal
-            self.setValue(newVal)
-            self.sliderMoved.emit(newVal)
-            event.accept()
+            self.__set(event)
         else:
             super().mousePressEvent(event)
 
@@ -38,14 +45,6 @@ class ClickableSlider(QSlider):
     ########################################
     def mouseMoveEvent(self, event):
         if self.is_pressed_outside:
-            if self.orientation() == Qt.Horizontal:
-                newVal = int(self.minimum() + ((self.maximum() - self.minimum()) * (event.x() - self._handle_size // 2)) / (self.width() - self._handle_size))
-            else:
-                newVal = int(self.maximum() - ((self.maximum() - self.minimum()) * (event.y() - self._handle_size // 2)) / (self.height() - self._handle_size))
-            if self.invertedAppearance():
-                newVal = self.maximum() - newVal
-            self.setValue(newVal)
-            self.sliderMoved.emit(newVal)
-            event.accept()
+            self.__set(event)
         else:
             super().mouseMoveEvent(event)
