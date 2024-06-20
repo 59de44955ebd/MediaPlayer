@@ -11,7 +11,7 @@ A simple media player for macOS and Windows, based on Python 3, PyQt5 (portable 
 * **macOS**: aac ac3 aiff caf flac mp3 wav
 
 ## Supported video codecs (selection)
-* **Windows**: bink cinepak dirac dvvideo flv1 (sorenson spark) fraps h264 hevc indeo mjpeg mpeg1 mpeg2 mpeg4 msrle msvideo1 prores422 prores4444 qtrle vp4 vp6 vp7 wmv12 wmv3
+* **Windows**: bink cinepak dirac dvvideo flv1 (sorenson spark) fraps gif h264 hevc indeo mjpeg mpeg1 mpeg2 mpeg4 msrle msvideo1 prores422 prores4444 qtrle vp4 vp6 vp7 wmv12 wmv3
 * **macOS**: cinepak dvvideo h264 hevc mjpeg mpeg1 mpeg2 prores422 prores4444  
 (+ [Pro Video Formats](https://support.apple.com/en-us/106396), if installed)
 
