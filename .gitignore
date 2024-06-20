@@ -18,3 +18,5 @@ _backup.rar
 .env
 /nsis/uninstall_list.nsh
 /run.cmd
+/.idea
+/*.code-workspace

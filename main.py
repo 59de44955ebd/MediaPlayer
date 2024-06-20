@@ -4,7 +4,7 @@ import time
 import traceback
 
 from PyQt5.QtCore import Qt, QResource, QTimer, QTime, QEvent, pyqtSignal
-from PyQt5.QtWidgets import (qApp, QMainWindow, QApplication, QWidget, QToolButton, QSlider, QLabel,
+from PyQt5.QtWidgets import (qApp, QMainWindow, QApplication, QWidget, QLabel,
         QSizePolicy, QActionGroup, QMessageBox, QFileDialog)
 from PyQt5 import uic
 
