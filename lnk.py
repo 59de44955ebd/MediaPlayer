@@ -4,7 +4,6 @@ __all__ = ["get_lnk_target_path"]
 
 from dshow.comtypes import GUID, CreateObject
 from dshow.lib import IDispatch, COMMETHOD, HRESULT, BSTR, POINTER
-#from dshow import CreateObject
 
 class IWshShell(IDispatch):
     """Shell Object Interface"""
