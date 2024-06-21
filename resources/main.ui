@@ -90,6 +90,8 @@
     <addaction name="action_open"/>
     <addaction name="action_close"/>
     <addaction name="separator"/>
+    <addaction name="action_show_media_infos"/>
+    <addaction name="separator"/>
     <addaction name="action_quit"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -159,6 +161,9 @@
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="action_close">
    <property name="enabled">
@@ -169,6 +174,9 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="action_quit">
@@ -254,6 +262,9 @@
    </property>
    <property name="shortcut">
     <string>F1</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="action_play">
@@ -385,6 +396,17 @@
    </property>
    <property name="shortcut">
     <string>T</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="action_show_media_infos">
+   <property name="text">
+    <string>Show Media Infos</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>

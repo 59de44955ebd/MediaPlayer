@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import time
 import traceback
@@ -71,6 +72,7 @@ class Main(QMainWindow):
         self.action_open.triggered.connect(self.slot_open)
         self.action_close.triggered.connect(lambda:
             self.video_widget.close_media() or self.slot_ready(False))
+        self.action_show_media_infos.triggered.connect(self.slot_show_media_infos)
         self.action_toggle_fullscreen.triggered.connect(self.slot_toggle_fullscreen)
         self.action_toggle_show_msecs.triggered.connect(self.slot_toggle_show_msecs)
         self.action_toggle_play.triggered.connect(self.slot_toggle_playback)
@@ -278,6 +280,21 @@ class Main(QMainWindow):
     def slot_double_clicked(self):
         self.video_widget.toggle_playback()
         self.slot_toggle_fullscreen()
+
+    ########################################
+    #
+    ########################################
+    def slot_show_media_infos(self):
+        if self.video_widget.filename is None:
+            return
+        infos = subprocess.run([os.path.join(RES_DIR, 'mediainfo'), self.video_widget.filename],
+                capture_output=True, shell=True).stdout.decode().strip()
+        dialog = QMessageBox(QMessageBox.NoIcon, 'Media Infos', f'<pre>{infos}</pre>', QMessageBox.Ok, parent=self)
+        dialog.setObjectName('mediainfos')
+        if IS_WIN:
+            windll.dwmapi.DwmSetWindowAttribute(int(dialog.winId()),
+                    DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
+        dialog.exec()
 
 
 if __name__ == '__main__':

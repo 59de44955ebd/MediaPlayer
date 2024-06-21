@@ -41,3 +41,6 @@ QStatusBar QLabel {
 	font-family: "Courier New";
 	font-size: 11px;
 }
+QMessageBox#mediainfos {
+	font-size: 11px;
+}
