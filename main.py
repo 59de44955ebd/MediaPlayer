@@ -184,7 +184,7 @@ class Main(QMainWindow):
             self.label_statusbar.setVisible(True) #self._duration > 0)
             self.action_toggle_fullscreen.setEnabled(has_video)
             self.action_toggle_play.setEnabled(True)
-            for action in (self.action_play, self.action_pause, self.action_stop):
+            for action in (self.action_show_media_infos, self.action_close, self.action_play, self.action_pause, self.action_stop):
                 action.setEnabled(True)
             for action in (self.action_skip_back, self.action_step_back, self.action_step_forward, self.action_skip_forward):
                 action.setEnabled(self._duration > 0)
@@ -198,7 +198,7 @@ class Main(QMainWindow):
             self.label_statusbar.setVisible(False)
             self.action_toggle_fullscreen.setEnabled(False)
             self.action_toggle_play.setEnabled(False)
-            for action in (self.action_play, self.action_pause, self.action_stop, self.action_skip_back,
+            for action in (self.action_show_media_infos, self.action_close, self.action_play, self.action_pause, self.action_stop, self.action_skip_back,
                     self.action_step_back, self.action_step_forward, self.action_skip_forward):
                 action.setEnabled(False)
             self.action_stop.setChecked(True)
@@ -296,7 +296,7 @@ class Main(QMainWindow):
         infos = subprocess.run([os.path.join(RES_DIR, 'mediainfo'), self.video_widget.filename],
                 capture_output=True, shell=IS_WIN).stdout.decode().strip()
         self.dialog_media_infos.plainTextEdit.setPlainText(infos)
-        self.dialog_media_infos.exec()
+        self.dialog_media_infos.show()
 
 
 if __name__ == '__main__':

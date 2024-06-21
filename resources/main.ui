@@ -167,7 +167,7 @@
   </action>
   <action name="action_close">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>&amp;Close</string>
@@ -402,6 +402,9 @@
    </property>
   </action>
   <action name="action_show_media_infos">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Show Media Infos</string>
    </property>
