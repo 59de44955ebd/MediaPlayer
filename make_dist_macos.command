@@ -31,6 +31,8 @@ echo '****************************************'
 cp resources/main.ui "dist/$APP_NAME.app/Contents/Resources/"
 cp resources/main.rcc "dist/$APP_NAME.app/Contents/Resources/"
 cp resources/style.css "dist/$APP_NAME.app/Contents/Resources/"
+cp resources/mediainfos.ui "dist/$APP_NAME.app/Contents/Resources/"
+cp resources/mediainfo "dist/$APP_NAME.app/Contents/Resources/"
 
 echo
 echo '****************************************'

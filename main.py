@@ -5,7 +5,7 @@ import time
 import traceback
 
 from PyQt5.QtCore import Qt, QResource, QTimer, QTime, QEvent, pyqtSignal
-from PyQt5.QtWidgets import (qApp, QMainWindow, QApplication, QWidget, QLabel,
+from PyQt5.QtWidgets import (qApp, QMainWindow, QApplication, QWidget, QLabel, QDialog,
         QSizePolicy, QActionGroup, QMessageBox, QFileDialog)
 from PyQt5 import uic
 
@@ -67,6 +67,12 @@ class Main(QMainWindow):
 
         QResource.registerResource(os.path.join(RES_DIR, 'main.rcc'))
         uic.loadUi(os.path.join(RES_DIR, 'main.ui'), self)
+
+        self.dialog_media_infos = QDialog(self)
+        uic.loadUi(os.path.join(RES_DIR, 'mediainfos.ui'), self.dialog_media_infos)
+        if IS_WIN:
+            windll.dwmapi.DwmSetWindowAttribute(int(self.dialog_media_infos.winId()),
+                    DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
 
         # menu
         self.action_open.triggered.connect(self.slot_open)
@@ -288,13 +294,9 @@ class Main(QMainWindow):
         if self.video_widget.filename is None:
             return
         infos = subprocess.run([os.path.join(RES_DIR, 'mediainfo'), self.video_widget.filename],
-                capture_output=True, shell=True).stdout.decode().strip()
-        dialog = QMessageBox(QMessageBox.NoIcon, 'Media Infos', f'<pre>{infos}</pre>', QMessageBox.Ok, parent=self)
-        dialog.setObjectName('mediainfos')
-        if IS_WIN:
-            windll.dwmapi.DwmSetWindowAttribute(int(dialog.winId()),
-                    DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
-        dialog.exec()
+                capture_output=True, shell=IS_WIN).stdout.decode().strip()
+        self.dialog_media_infos.plainTextEdit.setPlainText(infos)
+        self.dialog_media_infos.exec()
 
 
 if __name__ == '__main__':

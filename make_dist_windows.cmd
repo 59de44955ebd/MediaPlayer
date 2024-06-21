@@ -38,6 +38,7 @@ mkdir "dist\%APP_NAME%\_internal\resources"
 copy resources\main.ui "dist\%APP_NAME%\_internal\resources\"
 copy resources\main.rcc "dist\%APP_NAME%\_internal\resources\"
 copy resources\style.css "dist\%APP_NAME%\_internal\resources\"
+copy resources\mediainfos.ui "dist\%APP_NAME%\_internal\resources\"
 copy resources\mediainfo.exe "dist\%APP_NAME%\_internal\resources\"
 xcopy /e resources\filters "dist\%APP_NAME%\_internal\resources\filters\"
 
