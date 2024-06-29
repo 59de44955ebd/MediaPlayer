@@ -64,7 +64,10 @@ class VideoWidget(QWidget):
         if self._player is not None:
             self.close_media()
         self.filename = filename
-        url = NSURL.fileURLWithPath_(filename)
+        if filename.startswith('http://') or filename.startswith('https://'):
+            url = NSURL.URLWithString_(filename)
+        else:
+            url = NSURL.fileURLWithPath_(filename)
         self._player = AVFoundation.AVPlayer.playerWithURL_(url)
 
         # create AVPlayerLayer

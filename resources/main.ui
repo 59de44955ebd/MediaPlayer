@@ -88,6 +88,7 @@
      <string>File</string>
     </property>
     <addaction name="action_open"/>
+    <addaction name="action_open_url"/>
     <addaction name="action_close"/>
     <addaction name="separator"/>
     <addaction name="action_show_media_infos"/>
@@ -413,6 +414,14 @@
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="action_open_url">
+   <property name="text">
+    <string>Open &amp;URL...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
    </property>
   </action>
  </widget>

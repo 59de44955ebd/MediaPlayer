@@ -6,7 +6,7 @@ import traceback
 
 from PyQt5.QtCore import Qt, QResource, QTimer, QTime, QEvent, pyqtSignal
 from PyQt5.QtWidgets import (qApp, QMainWindow, QApplication, QWidget, QLabel, QDialog,
-        QSizePolicy, QActionGroup, QMessageBox, QFileDialog)
+        QSizePolicy, QActionGroup, QMessageBox, QFileDialog, QInputDialog)
 from PyQt5 import uic
 
 from dark import palette
@@ -76,6 +76,7 @@ class Main(QMainWindow):
 
         # menu
         self.action_open.triggered.connect(self.slot_open)
+        self.action_open_url.triggered.connect(self.slot_open_url)
         self.action_close.triggered.connect(lambda:
             self.video_widget.close_media() or self.slot_ready(False))
         self.action_show_media_infos.triggered.connect(self.slot_show_media_infos)
@@ -211,6 +212,27 @@ class Main(QMainWindow):
         filename, _ = QFileDialog.getOpenFileName(self, 'Select media file')
         if filename:
             self.video_widget.load_media(filename)
+            self.activateWindow()
+
+    ########################################
+    #
+    ########################################
+    def slot_open_url(self):
+        dialog = QInputDialog(self)
+        dialog.setWindowTitle('Open URL')
+        dialog.setLabelText('Please enter a URL:')
+        size = dialog.size()
+        size.setWidth(400)
+        dialog.resize(size)
+        if IS_WIN:
+            windll.dwmapi.DwmSetWindowAttribute(int(dialog.winId()),
+                    DWMWA_USE_IMMERSIVE_DARK_MODE, byref(c_int(1)), 4)
+        res = dialog.exec()
+        if not res:
+            return
+        url = dialog.textValue()
+        if url:
+            self.video_widget.load_media(url)
             self.activateWindow()
 
     ########################################
