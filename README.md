@@ -37,7 +37,7 @@ load_media(filename: str)
 close_media()
 step(steps: int)            -> step <steps> frames forward, or back if <steps> is negative
 get_natural_size()          -> returns tuple (width, height) or None
-get_duration()              -> returns seconds as float, or 0 if there is no duration (livestream)
+get_duration()              -> returns seconds as float, or 0 if there is no duration
 get_fps()                   -> returns fps as float, or None if there is no framerate
 has_video()                 -> returns bool (True or False)
 has_audio()                 -> returns bool (True or False)
