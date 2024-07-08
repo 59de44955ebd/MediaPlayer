@@ -4,7 +4,7 @@ import sys
 import time
 import traceback
 
-from PyQt5.QtCore import Qt, QResource, QTimer, QTime, QEvent, pyqtSignal
+from PyQt5.QtCore import Qt, QResource, QTimer, QTime, QEvent, pyqtSignal, QRect
 from PyQt5.QtWidgets import (qApp, QMainWindow, QApplication, QWidget, QLabel, QDialog,
         QSizePolicy, QActionGroup, QMessageBox, QFileDialog, QInputDialog)
 from PyQt5 import uic
@@ -99,6 +99,8 @@ class Main(QMainWindow):
         # statusbar
         self.label_statusbar = QLabel()
         self.label_statusbar.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        if IS_MAC:
+            self.label_statusbar.setStyleSheet('font-family: "Andale Mono";')
         self.statusbar.addPermanentWidget(self.label_statusbar)
 
         # toolbar
@@ -136,12 +138,15 @@ class Main(QMainWindow):
 
         self.slider_volume.setValue(int(100 * self.video_widget.get_volume()))
 
-        if len(sys.argv) > 1:
-            self.video_widget.load_media(sys.argv[1])
-
+        r = QRect(0, 0, 640, 400)
+        r.moveCenter(self.screen().geometry().center())
+        self.setGeometry(r)
         self.show()
 
         self.setMinimumHeight(self.height() - self.video_widget.height())
+
+        if len(sys.argv) > 1:
+            self.video_widget.load_media(sys.argv[1])
 
     ########################################
     #

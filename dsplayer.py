@@ -8,7 +8,7 @@ from dshow import Player
 # completely optional
 SUPPORT_LNK_FILES = True
 if SUPPORT_LNK_FILES:
-    from lnk import get_lnk_target_path
+    from dshow.lnk import get_lnk_target_path
 
 
 class VideoWidget(QWidget):
